@@ -11,6 +11,9 @@ export const deferredStyleSheets = [];
 // to document.body when the document is fully loaded.
 export const deferredDocumentStyleElements = [];
 
+// Shadow roots that have adopted styles before the polyfill was initialized
+export const deferredAdopters = [];
+
 // Adopted stylesheets of specific location (ShadowRoot or Document).
 export const adoptedSheetsRegistry = new WeakMap();
 
@@ -20,6 +23,12 @@ export const sheetMetadataRegistry = new WeakMap();
 // Location of the specific adopter (HTMLStyleElement that stylizes this
 // location).
 export const locationRegistry = new WeakMap();
+
+/**
+ * Save a reference to all shadow roots created
+ * @type {WeakMap<Element, ShadowRoot>}
+ */
+export const shadowRootMap = new WeakMap();
 
 // MutationObserver of the specific location.
 export const observerRegistry = new WeakMap();

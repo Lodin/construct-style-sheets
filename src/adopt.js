@@ -55,7 +55,7 @@ export function adoptStyleSheets(location) {
 
   // Since we already removed all elements during appending them to the
   // document fragment, we can just re-add them again.
-  location.insertBefore(newStyles, location.firstChild);
+  location.insertBefore(newStyles, location.lastChild);
 
   // We need to apply all actions we have done with the original CSSStyleSheet
   // to each new style element and to any other element that missed last
@@ -78,15 +78,20 @@ export function adoptStyleSheets(location) {
 
 export function removeExcludedStyleSheets(location, oldSheets) {
   const sheets = getAdoptedStyleSheet(location);
-
   for (let i = 0, len = oldSheets.length; i < len; i++) {
     if (sheets.indexOf(oldSheets[i]) > -1) {
-      return;
+      continue;
     }
 
     const {adopters} = sheetMetadataRegistry.get(oldSheets[i]);
     const observer = observerRegistry.get(location);
-    const styleElement = adopters.get(location);
+    let styleElement = adopters.get(location);
+
+    // In case the sheet was saved to document.head
+    // before the document was ready
+    if (!styleElement) {
+      styleElement = adopters.get(document.head);
+    }
 
     observer.disconnect();
     styleElement.parentNode.removeChild(styleElement);

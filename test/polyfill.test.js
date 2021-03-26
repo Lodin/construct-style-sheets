@@ -1,6 +1,19 @@
 import {defineCE} from '@open-wc/testing-helpers/src/helpers';
 import {stringFixture as fixture} from '@open-wc/testing-helpers/src/stringFixture';
 
+// This is so that tests will run synchronously despite
+// the fact that requestAnimationFrame is asynchronous
+window.requestAnimationFrame = function(callback) {
+  callback();
+}
+
+const IMPORT_PATTERNS = [
+  '@import \'foo.css\'',
+  '@import "foo.css"',
+  '@import url(\'foo.css\')',
+  '@import url("foo.css")',
+]
+
 describe('Constructible Style Sheets polyfill', () => {
   describe('CSSStyleSheet object', () => {
     let globalStyle;
@@ -26,18 +39,46 @@ describe('Constructible Style Sheets polyfill', () => {
       expect(sheet.replaceSync).toBeDefined();
     });
 
-    it('passes instanceof check', () => {
+    it('passes instanceof checks', () => {
       expect(sheet instanceof CSSStyleSheet).toBeTruthy();
+
+      const style = document.createElement('style');
+      document.body.append(style);
+      expect(style.sheet instanceof CSSStyleSheet).toBeTruthy();
     });
 
-    it('allows overriding the CSSStyleSheet prototype methods', () => {
-      const css = '* { color: tomato; }';
-      const replaceSyncSpy = spyOn(CSSStyleSheet.prototype, 'replaceSync');
-      sheet.replaceSync(css);
+    it('applies to elements created during polyfill loading', () => {
+      const host = document.querySelector('#added-while-loading');
+      const span = host.shadowRoot.querySelector('span');
+      expect(getComputedStyle(span).color).toBe('rgb(0, 0, 255)');
+    });
+    describe('illegal invocation', () => {
+      const REG_ILLEGAL = /Illegal invocation/i;
 
-      expect(replaceSyncSpy).toHaveBeenCalledWith(css);
+      // sync methods
+      ['deleteRule', 'insertRule', 'replaceSync'].forEach(method => {
+        it(`occurs when ${method} is improperly invoked`, () => {
+          expect(CSSStyleSheet.prototype[method]).toThrowError(REG_ILLEGAL)
+        })
+      });
 
-      replaceSyncSpy.and.callThrough();
+      // async methods
+      ['replace'].forEach(method => {
+        it(`occurs when ${method} is improperly invoked`, async () => {
+          try {
+            await CSSStyleSheet.prototype[method]();
+          } catch (error) {
+            expect(error.message).toMatch(REG_ILLEGAL);
+          }
+        })
+      });
+
+      // properties/getters
+      ['cssRules'].forEach(prop => {
+        it(`occurs when ${prop} is improperly invoked`, () => {
+          expect(() => CSSStyleSheet.prototype[prop]).toThrowError(REG_ILLEGAL)
+        })
+      });
     });
 
     describe('replace', () => {
@@ -52,9 +93,8 @@ describe('Constructible Style Sheets polyfill', () => {
 
         const resolved = await result;
 
-        // Equal because polyfill cannot return the same CSSStyleSheet object
-        // since it is immutable.
-        expect(resolved).toEqual(sheet);
+        // Use toBe because there should be referential integrity
+        expect(resolved).toBe(sheet);
       });
 
       it('has a rule set', async () => {
@@ -62,14 +102,25 @@ describe('Constructible Style Sheets polyfill', () => {
         expect(updatedSheet.cssRules.length > 0).toBeTruthy();
       });
 
-      it('throws an error if it is called not from a CSSStyleSheet', async () => {
+      it('throws an error if it is called not from a non-constructed CSSStyleSheet', async () => {
         await globalStyle.sheet
           .replace('.only-test { color: blue; }')
+          .then(() => expect(true).toBe(false)) // should not hit this
           .catch(error => {
-            expect(error.message).toBe(
-              "Failed to execute 'replace' on 'CSSStyleSheet': Can't call replace on non-constructed CSSStyleSheets.",
+            expect(error.message).toContain(
+              "Can't call replace on non-constructed CSSStyleSheets.",
             );
           });
+      });
+
+      it('removes @import statements', async () => {
+        return await Promise.all(
+          IMPORT_PATTERNS.map(pattern => 
+            sheet.replace(pattern).then(() => {
+              expect(sheet.cssRules.length).toBe(0)
+            })
+          )
+        )
       });
     });
 
@@ -85,33 +136,30 @@ describe('Constructible Style Sheets polyfill', () => {
       });
 
       it('returns a CSSStyleSheet object itself', () => {
-        // Equal because polyfill cannot return the same CSSStyleSheet object
-        // since it is immutable.
-        expect(result).toEqual(sheet);
+        // Use toBe because there should be referential integrity
+        expect(result).toBe(sheet);
       });
 
       it('has a rule set', async () => {
         expect(result.cssRules.length > 0).toBeTruthy();
       });
 
-      it('throws an error if the @import expression exist in the CSS code', () => {
+      it('throws an error if it is called not from a CSSStyleSheet', () => {
         try {
-          sheet.replaceSync('@import "test.css"');
+          globalStyle.sheet.replaceSync('.only-test { color: blue; }');
+          expect(true).toBe(false) // should not hit this
         } catch (error) {
           expect(error.message).toContain(
-            '@import rules are not allowed when creating stylesheet synchronously',
+            "Can't call replaceSync on non-constructed CSSStyleSheets.",
           );
         }
       });
 
-      it('throws an error if it is called not from a CSSStyleSheet', () => {
-        try {
-          globalStyle.sheet.replaceSync('.only-test { color: blue; }');
-        } catch (error) {
-          expect(error.message).toBe(
-            "Failed to execute 'replaceSync' on 'CSSStyleSheet': Can't call replaceSync on non-constructed CSSStyleSheets.",
-          );
-        }
+      it('removes @import statements', () => {
+        IMPORT_PATTERNS.forEach(pattern => {
+          sheet.replaceSync(pattern)
+          expect(sheet.cssRules.length).toBe(0)
+        })
       });
     });
   });
@@ -521,6 +569,23 @@ describe('Constructible Style Sheets polyfill', () => {
       document.adoptedStyleSheets = styleSheets;
 
       expect(document.adoptedStyleSheets).toEqual(styleSheets);
+    });
+
+    it('removes styles properly', async () => {
+      const element = await fixture('<div class="foo"></div>');
+
+      const css1 = new CSSStyleSheet();
+      css1.replaceSync('.foo { line-height: 9px }');
+
+      const css2 = new CSSStyleSheet();
+      css2.replaceSync('.foo { line-height: 10px !important }');
+
+      document.adoptedStyleSheets = [css1, css2];
+      checkGlobalCss(element, {'line-height': '10px'});
+
+      document.adoptedStyleSheets = [css1];
+      checkGlobalCss(element, {'line-height': '9px'});
+
     });
   });
 });

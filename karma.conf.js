@@ -36,12 +36,19 @@ module.exports = config => {
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
     frameworks: ['jasmine', 'detectBrowsers'],
+    client: {
+      jasmine: {
+        random: false
+      }
+    },
 
     // list of files / patterns to load in the browser
     files: [
       {pattern: 'test/polyfills.js', watched: false},
       {pattern: 'src/index.js', watched: false},
+      {pattern: 'test/init-while-loading.js', watched: false},
       {pattern: 'test/polyfill.test.js', watched: false},
+      {pattern: 'test/closed-root.test.js', watched: false}
     ],
 
     // list of files / patterns to exclude
@@ -93,6 +100,9 @@ module.exports = config => {
     detectBrowsers: {
       usePhantomJS: false,
       preferHeadless: true,
+      postDetection(availableBrowsers) {
+        return availableBrowsers.filter(browser => browser !== 'SafariTechPreview');
+      }
     },
 
     rollupPreprocessor: {

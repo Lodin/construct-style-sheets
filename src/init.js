@@ -3,10 +3,12 @@ import {updatePrototype} from './ConstructStyleSheet';
 import {createObserver} from './observer';
 import {
   adoptedSheetsRegistry,
+  deferredAdopters,
   deferredDocumentStyleElements,
   deferredStyleSheets,
   frame,
   hasShadyCss,
+  shadowRootMap,
   state,
 } from './shared';
 import {checkAndPrepare, isDocumentLoading} from './utils';
@@ -50,6 +52,13 @@ export function initPolyfill() {
 
   document.body.insertBefore(fragment, document.body.firstChild);
 
+  for (let i = 0, len = deferredAdopters.length; i < len; i++) {
+    adoptStyleSheets(deferredAdopters[i]);
+  }
+
+  // Clear out the deferredAdopters array.
+  deferredAdopters.length = 0;
+
   // Clear out the deferredStyleSheets array.
   deferredStyleSheets.length = 0;
 
@@ -88,9 +97,16 @@ export function initAdoptedStyleSheets() {
 
       // Element can adopt style sheets only when it is connected
       if (isConnected) {
-        adoptStyleSheets(location);
-        // Remove all the sheets the received array does not include.
-        removeExcludedStyleSheets(location, oldSheets);
+        // Request an animation frame to let nodes connect to the DOM
+        // before attempting to adopt the stylesheet(s)
+        window.requestAnimationFrame(() => {
+          adoptStyleSheets(location);
+          // Remove all the sheets the received array does not include.
+          removeExcludedStyleSheets(location, oldSheets);
+        });
+      } else {
+        // Element is not connected so the stylesheet must be adopted later
+        deferredAdopters.push(location);
       }
     },
   };
@@ -102,14 +118,15 @@ export function initAdoptedStyleSheets() {
   );
 
   if (typeof ShadowRoot !== 'undefined') {
-    const {attachShadow} = HTMLElement.prototype;
+    const {attachShadow} = Element.prototype;
 
     // Shadow root of each element should be observed to add styles to all
     // elements added to this root.
-    HTMLElement.prototype.attachShadow = function() {
+    Element.prototype.attachShadow = function() {
       // In case we have ShadowDOM emulation, we have to use element itself
       // instead of the ShadowRoot
       const location = hasShadyCss ? this : attachShadow.apply(this, arguments);
+      shadowRootMap.set(this, location);
       createObserver(location);
 
       return location;

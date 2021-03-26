@@ -2,6 +2,132 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.4.16](https://github.com/calebdwilliams/adoptedStyleSheets/compare/v2.4.15...v2.4.16) (2021-02-14)
+
+
+### Bug Fixes
+
+* add support for closed shadow roots ([82ab33b](https://github.com/calebdwilliams/adoptedStyleSheets/commit/82ab33b8eaf5baf60ce5939cadf442cf3ad70e88))
+
+### [2.4.15](https://github.com/calebdwilliams/adoptedStyleSheets/compare/v2.4.14...v2.4.15) (2021-02-14)
+
+### [2.4.14](https://github.com/calebdwilliams/adoptedStyleSheets/compare/v2.4.11...v2.4.14) (2021-02-14)
+
+
+### Bug Fixes
+
+* apply styles to element created during document loading ([#70](https://github.com/calebdwilliams/adoptedStyleSheets/issues/70)) ([35b0236](https://github.com/calebdwilliams/adoptedStyleSheets/commit/35b02365de1b86ea2df4ff109254ef18174b4651)), closes [#67](https://github.com/calebdwilliams/adoptedStyleSheets/issues/67)
+
+### [2.4.13](https://github.com/calebdwilliams/adoptedStyleSheets/compare/v2.4.11...v2.4.13) (2021-02-14)
+
+
+### Bug Fixes
+
+* apply styles to element created during document loading ([#70](https://github.com/calebdwilliams/adoptedStyleSheets/issues/70)) ([35b0236](https://github.com/calebdwilliams/adoptedStyleSheets/commit/35b02365de1b86ea2df4ff109254ef18174b4651)), closes [#67](https://github.com/calebdwilliams/adoptedStyleSheets/issues/67)
+
+### [2.4.12](https://github.com/calebdwilliams/adoptedStyleSheets/compare/v2.4.11...v2.4.12) (2021-02-14)
+
+
+### Bug Fixes
+
+* apply styles to element created during document loading ([#70](https://github.com/calebdwilliams/adoptedStyleSheets/issues/70)) ([35b0236](https://github.com/calebdwilliams/adoptedStyleSheets/commit/35b02365de1b86ea2df4ff109254ef18174b4651)), closes [#67](https://github.com/calebdwilliams/adoptedStyleSheets/issues/67)
+
+### [2.4.11](https://github.com/calebdwilliams/adoptedStyleSheets/compare/v2.4.9...v2.4.11) (2021-02-13)
+
+
+### Bug Fixes
+
+* on adopt insert after last child ([c7083ad](https://github.com/calebdwilliams/adoptedStyleSheets/commit/c7083ade7cb5862238dbc1243c5be51f7e72b275))
+
+### [2.4.10](https://github.com/calebdwilliams/adoptedStyleSheets/compare/v2.4.9...v2.4.10) (2021-02-13)
+
+
+### Bug Fixes
+
+* on adopt insert after last child ([c7083ad](https://github.com/calebdwilliams/adoptedStyleSheets/commit/c7083ade7cb5862238dbc1243c5be51f7e72b275))
+
+### [2.4.9](https://github.com/calebdwilliams/adoptedStyleSheets/compare/v2.4.6...v2.4.9) (2021-02-07)
+
+
+### Bug Fixes
+
+* add declare module to typings ([#68](https://github.com/calebdwilliams/adoptedStyleSheets/issues/68)) ([8f1e1cc](https://github.com/calebdwilliams/adoptedStyleSheets/commit/8f1e1ccde2af4102388e32e1c41c6dee0b249bc8))
+
+### [2.4.8](https://github.com/calebdwilliams/adoptedStyleSheets/compare/v2.4.6...v2.4.8) (2021-02-07)
+
+
+### Bug Fixes
+
+* add declare module to typings ([#68](https://github.com/calebdwilliams/adoptedStyleSheets/issues/68)) ([8f1e1cc](https://github.com/calebdwilliams/adoptedStyleSheets/commit/8f1e1ccde2af4102388e32e1c41c6dee0b249bc8))
+
+### [2.4.7](https://github.com/calebdwilliams/adoptedStyleSheets/compare/v2.4.6...v2.4.7) (2021-02-07)
+
+
+### Bug Fixes
+
+* add declare module to typings ([#68](https://github.com/calebdwilliams/adoptedStyleSheets/issues/68)) ([8f1e1cc](https://github.com/calebdwilliams/adoptedStyleSheets/commit/8f1e1ccde2af4102388e32e1c41c6dee0b249bc8))
+
+### [2.4.6](https://github.com/calebdwilliams/adoptedStyleSheets/compare/v2.4.5...v2.4.6) (2020-12-29)
+
+
+### Bug Fixes
+
+* add typings to files ([d7abf3c](https://github.com/calebdwilliams/adoptedStyleSheets/commit/d7abf3cb176fa3d20311164babc6aa91bd65e8a6))
+
+### [2.4.5](https://github.com/calebdwilliams/adoptedStyleSheets/compare/v2.4.4...v2.4.5) (2020-12-29)
+
+### [2.4.4](https://github.com/calebdwilliams/adoptedStyleSheets/compare/v2.4.3...v2.4.4) (2020-12-29)
+
+
+### Bug Fixes
+
+* ensure referential integrity, match chromes behavior ([99bdde3](https://github.com/calebdwilliams/adoptedStyleSheets/commit/99bdde34548e08f3949ba817da61693a9248e731))
+* loosen import regex, update import tests and invocation tests ([c62fde6](https://github.com/calebdwilliams/adoptedStyleSheets/commit/c62fde60db9abff6ead0ba8dfb1c9fd4733d5b19))
+
+### [2.4.3](https://github.com/calebdwilliams/adoptedStyleSheets/compare/v2.4.2...v2.4.3) (2020-11-18)
+
+
+### Bug Fixes
+
+* abort mutation callback if document doesn't exist anymore ([28b4223](https://github.com/calebdwilliams/adoptedStyleSheets/commit/28b4223775d90b454371422f7fc6c5d9593eed69))
+
+### [2.4.2](https://github.com/calebdwilliams/adoptedStyleSheets/compare/v2.4.1...v2.4.2) (2020-09-25)
+
+
+### Bug Fixes
+
+* move attachShadow override to Element per spec ([1e11b32](https://github.com/calebdwilliams/adoptedStyleSheets/commit/1e11b329f1a937e6f73bdca05d6ccc4baad894ab))
+
+### [2.4.1](https://github.com/calebdwilliams/adoptedStyleSheets/compare/v2.4.0...v2.4.1) (2020-09-06)
+
+
+### Bug Fixes
+
+* remove console.log from dist ([be23440](https://github.com/calebdwilliams/adoptedStyleSheets/commit/be234402d36c6eaf17b57457ed7964f03e17a403))
+
+## [2.4.0](https://github.com/calebdwilliams/adoptedStyleSheets/compare/v2.3.5...v2.4.0) (2020-08-19)
+
+
+### Features
+
+* remove [@import](https://github.com/import) support per new behavior in Chrome ([8fa34a9](https://github.com/calebdwilliams/adoptedStyleSheets/commit/8fa34a99c73554e0b1818e895c4d4a6252f9e081))
+
+
+### Bug Fixes
+
+* remove styles properly ([4d5709f](https://github.com/calebdwilliams/adoptedStyleSheets/commit/4d5709ffde6aa7fb116769e798d84947d6739727))
+
+### [2.3.5](https://github.com/calebdwilliams/adoptedStyleSheets/compare/v2.3.4...v2.3.5) (2020-02-06)
+
+### [2.3.4](https://github.com/calebdwilliams/adoptedStyleSheets/compare/v2.3.3...v2.3.4) (2020-02-06)
+
+### [2.3.3](https://github.com/calebdwilliams/adoptedStyleSheets/compare/v2.3.2...v2.3.3) (2020-02-06)
+
+
+### Bug Fixes
+
+* **polyfill:** Fix a race condition with adopting stylesheets in Firefox ([15ce973](https://github.com/calebdwilliams/adoptedStyleSheets/commit/15ce973))
+
 ### [2.3.2](https://github.com/calebdwilliams/adoptedStyleSheets/compare/v2.3.1...v2.3.2) (2019-11-20)
 
 ### [2.3.1](https://github.com/calebdwilliams/adoptedStyleSheets/compare/v2.3.0...v2.3.1) (2019-11-16)

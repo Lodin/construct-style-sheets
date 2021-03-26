@@ -1,12 +1,13 @@
 {
   "name": "construct-style-sheets-polyfill",
-  "version": "2.3.2",
+  "version": "2.4.16",
   "description": "Constructible style sheets/adopted style sheets polyfill",
   "main": "dist/adoptedStyleSheets.js",
   "module": "dist/adoptedStyleSheets.js",
   "types": "dist/adoptedStyleSheets.d.ts",
   "files": [
-    "dist/adoptedStyleSheets.js"
+    "dist/adoptedStyleSheets.js",
+    "dist/adoptedStyleSheets.d.ts"
   ],
   "scripts": {
     "build": "rollup -c rollup.config.js",
@@ -35,13 +36,16 @@
     "@babel/core": "^7.7.2",
     "@babel/plugin-transform-instanceof": "^7.5.5",
     "@babel/preset-env": "^7.7.1",
+    "@commitlint/config-conventional": "^11.0.0",
     "@open-wc/testing-helpers": "^1.3.0",
     "@webcomponents/webcomponentsjs": "^2.4.0",
     "babel-loader": "^8.0.6",
     "babel-plugin-istanbul": "^5.2.0",
     "babel-plugin-transform-async-to-promises": "^0.8.15",
     "codecov": "^3.6.1",
+    "commitlint": "^11.0.0",
     "core-js-pure": "^3.4.1",
+    "husky": "^4.3.8",
     "istanbul-instrumenter-loader": "^3.0.1",
     "jasmine-core": "^3.5.0",
     "karma": "^4.4.1",
@@ -63,7 +67,7 @@
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-copy": "^3.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "standard-version": "^7.0.0",
+    "standard-version": "^8.0.1",
     "typescript": "^3.7.2"
   },
   "keywords": [
@@ -80,5 +84,10 @@
     "polyfill",
     "CSS modules"
   ],
-  "dependencies": {}
+  "dependencies": {},
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  }
 }
